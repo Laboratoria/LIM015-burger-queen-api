@@ -4,7 +4,7 @@ Una vez creado tu fork y clonado el repo en tu computadora, antes de poder
 comenzar a codear, tenemos primero que crear nuestro _entorno de desarrollo_.
 Para ello te recomendamos seguir los pasos a continuación:
 
-* [1. Elegir base de datos](#1-elegir-base-de-datos)
+* [1. base de datos](#1-base-de-datos)
 * [2. Instalar `docker` y `docker-compose`](#2-instalar-docker-y-docker-compose)
 * [3. Configurar "servicio" de base de datos](#3-configurar-servicio-de-base-de-datos)
 * [4. Configurar conexión a BBDD en "servicio" node](#4-configurar-conexión-a-bbdd-en-servicio-node)
@@ -18,17 +18,14 @@ Para ello te recomendamos seguir los pasos a continuación:
 
 ***
 
-## 1. Elegir base de datos
+## 1. Base de datos
 
-La primera decisión que tenemos que tomar, antes de comenzar a programar, es
-elegir una base de datos. En este proyecto se sugieren 3 opciones: dos de ellas
-_relacionales_ y basadas en SQL, (PostgreSQL y MySQL), y otra _no relacional_
-(MongoDB). Las 3 son excelentes opciones.
+Para este proyecto se propone el uso de MongoDB, si bien existen otras alternativas 
+como Mysql Y Postgresql que son bases de datos relacionales, MongoDB es la más _común_ (popular) 
+a día de hoy en el ecosistema de Node.js. 
 
-Algunos puntos a tener en cuenta:
+Algunos puntos a tener en cuenta para futuros desarrollos:
 
-* MongoDB es la más _común_ (popular) a día de hoy en el ecosistema de
-  Node.js.
 * Las bases de datos _relacionales_ normalmente requieren más diseño
   _a priori_ (definir tablas, columnas, relaciones, ...) mientras que las
   _no relacionales_ nos permiten ser más _flexibles_.
@@ -71,10 +68,8 @@ en Node.js (el servicio `node`).
 En la sección correspondiente al servicio `db` hay 3 cosas importantes que
 tendremos que completar:
 
-* Qué _imagen_ (`image`) queremos usar. Imágenes recomendadas:
-  [mongo](https://hub.docker.com/_/mongo),
-  [postgres](https://hub.docker.com/_/postgres) y
-  [mysql](https://hub.docker.com/_/mysql).
+* Qué _imagen_ (`image`) queremos usar. Imágen recomendada:
+  [mongo](https://hub.docker.com/_/mongo)
 * Qué volúmenes (`volumes`), archivos o carpetas, queremos mapear al
   contenedor, como por ejemplo el directorio de datos (la carpeta donde la
   base de datos guardará sus archivos).
@@ -97,37 +92,6 @@ db:
     - private
 ```
 
-Ejemplo de servicio `db` usando [PostgreSQL](https://hub.docker.com/_/postgres):
-
-```yml
-db:
-  image: postgres:13
-  volumes:
-    - ./db-data:/var/lib/postgresql/data
-  environment:
-    POSTGRES_PASSWORD: secret
-  restart: always
-  networks:
-    - private
-```
-
-Ejemplo de servicio `db` usando [MySQL](https://hub.docker.com/_/mysql):
-
-```yml
-db:
-  image: mysql:5
-  volumes:
-    - ./db-data:/var/lib/mysql
-  environment:
-    MYSQL_ROOT_PASSWORD: supersecret
-    MYSQL_DATABASE: bq
-    MYSQL_USER: bq
-    MYSQL_PASSWORD: secret
-  restart: always
-  networks:
-    - private
-```
-
 ## 4. Configurar conexión a BBDD en "servicio" node
 
 Ahora que ya tenemos la configuración del _servicio_ `db`, tenemos que
@@ -141,9 +105,9 @@ protocol://username:password@host:port/dbname?opt1=val1&...
 ```
 
 Acá sustituiremos `protocol` con el nombre del protocolo de la base de datos
-elegida (`mongodb`, `postgresql` o `mysql`) y `username`, `password` y
-`dbname` con los valores usados en la configuración del servicio `db` en el
-punto anterior. En este caso el valor de `host` será `db`, que es el nombre
+y `username`, `password` y `dbname` con los valores usados en la configuración 
+del servicio `db` en el punto anterior. 
+En este caso el valor de `host` será `db`, que es el nombre
 del servicio de base de datos en la configuración de `docker-compose.yml` y
 podemos referirnos a él por su nombre en la red interna entre los
 contenedores. Siguiendo con los ejemplos del punto anterior, la variable
@@ -155,27 +119,12 @@ contenedores. Siguiendo con los ejemplos del punto anterior, la variable
   DB_URL: mongodb://bq:secret@db:27017/bq?authSource=admin
   ```
 
-* PostgreSQL:
-
-  ```yml
-  DB_URL: postgresql://postgres:secret@db:5432/postgres?schema=public
-  ```
-
-* MySQL:
-
-  ```yml
-  DB_URL: mysql://bq:secret@db:3306/bq
-  ```
-
 ## 5. Elegir módulo (cliente)
 
 Ahora que ya tenemos un servidor de bases de datos vamos a necesitar elegir un
 módulo o librería diseñado para interactuar con nuestra base de datos desde
-Node.js. Existen un montón de opciones, pero para este proyecto te recomendamos
-elegir una de estas (que son las más populares para cada una de las bases de
-datos): [Mongoose](https://mongoosejs.com/) (MongoDB),
-[pg](https://www.npmjs.com/package/pg) (PostgreSQL) o
-[mysql](https://www.npmjs.com/package/mysql) (MySQL).
+Node.js. Existen un montón de opciones, pero para este proyecto te recomendamos: 
+[Mongoose](https://mongoosejs.com/) (MongoDB).
 
 El _boilerplate_ ya incluye un archivo `config.js` donde se leen las
 variables de entorno, y entre ellas está `DB_URL`. Como vemos ese valor lo
@@ -203,41 +152,6 @@ mongoose
   })
   .then(console.log)
   .catch(console.error);
-```
-
-Ejemplo de conexión usando [pg](https://www.npmjs.com/package/pg)
-(PostgreSQL):
-
-```js
-const pg = require("pg");
-const config = require("./config");
-
-const pgClient = new pg.Client({ connectionString: config.dbUrl });
-
-pgClient.connect();
-pgClient.query("SELECT NOW()", (err, res) => {
-  console.log(err, res);
-  pgClient.end();
-});
-```
-
-Ejemplo de conexión usando [mysql](https://www.npmjs.com/package/mysql)
-(MySQL):
-
-```js
-const mysql = require("mysql");
-const config = require("./config");
-
-const connection = mysql.createConnection(config.dbUrl);
-
-connection.connect();
-connection.query("SELECT 1 + 1 AS solution", (error, results) => {
-  if (error) {
-    return console.error(error);
-  }
-  console.log(`The solution is: ${results[0].solution}`);
-});
-connection.end();
 ```
 
 ## 6. Iniciar, re-iniciar y parar los servicios con `docker-compose`
@@ -354,11 +268,10 @@ docker-compose help up
 A la hora de trabajar con bases de datos es muy común usar algún tipo de
 interfaz gráfica que nos permita ver y manipular visualmente nuestra data.
 Hay opciones para cada base de datos. Recomendamos las siguientes:
-[Compass](https://www.mongodb.com/products/compass) (MongoDB),
-[Workbench](https://www.mysql.com/products/workbench/) (MySQL),
-[pgAdmin](https://www.pgadmin.org/) (PostgreSQL).
+[Compass](https://www.mongodb.com/products/compass)
+[Robo 3T](https://robomongo.org/) 
 
-Si quieres usar este tipo de herramientas (como `Compass` o `WorkBench`), es
+Si quieres usar este tipo de herramientas (como `Compass` o `robo 3T`), es
 probable que tengas que hacer que tu base de datos sea visible fuera de
 docker. Para ello puedes mapear el puerto de la base datos en el contenedor a
 algún puerto que esté libre en el host de docker (normalmente tu
@@ -380,9 +293,6 @@ host de docker (normalmente nuestra computadora - `127.0.0.1` o `localhost`).
 En el ejemplo de arriba estamos _mapeando_ el puerto `27017` del contenedor
 al puerto `28017` del host de docker.
 
-Si estás usando PostgreSQL o MySQL, los puertos que nos interesaría mapear
-serían el `5432` y `3306` respectivamente.
-
 Si estamos _exponiendo_ el puerto en nuestra computadora (el _host_), además
 tendrás también que conectar el contenedor `db` a la red _pública_:
 
@@ -395,28 +305,6 @@ networks:
 Después de este cambio podrás acceder usando `127.0.0.1` o `localhost` y el
 puerto al que hemos mapeado, `28017` en este ejemplo.
 
-Si eliges [pgAdmin](https://www.pgadmin.org/) (PostgreSQL), la opción más
-fácil es usar pgAdmin como contenedor y agregarlo como un nuevo servicio a
-nuestro `docker-compose.yml`. Por ejemplo:
-
-```yml
-pgadmin:
-  image: dpage/pgadmin4
-  restart: always
-  environment:
-    PGADMIN_DEFAULT_EMAIL: user@domain.com
-    PGADMIN_DEFAULT_PASSWORD: secret
-  ports:
-    - 8088:80
-  networks:
-    - public
-    - private
-```
-
-NOTA: Para conectar desde pgAdmin usando un contenedor, usa el _nombre_ del
-contenedor de la base datos (ie: `XXX-001-burger-queen-api_db_1`) como nombre
-de host para que pgAdmin se pueda conectar a través de la red _privada_.
-
 ## 9. Definir esquemas
 
 Llegado a este punto ya deberíamos tener una configuración de `docker-compose`
@@ -428,14 +316,9 @@ referimos a que tenemos que _describir_ de alguna forma las colecciones o
 tablas que vamos a usar y la _forma_ de los objetos o filas que vayamos a
 guardar en esas colecciones.
 
-Si has elegido MongoDB y Mongoose, este último nos ofrece un mecanismo para
-describir esos [_modelos_](https://mongoosejs.com/docs/models.html) y
+Mongoose nos ofrece un mecanismo para describir esos 
+[_modelos_](https://mongoosejs.com/docs/models.html) y
 [_esquemas_](https://mongoosejs.com/docs/guide.html) de datos en JavaScript.
-
-Si has elegido usar una base de datos SQL, es común incluir algunos scripts
-`.sql` con el código SQL que nos permita _crear_ (o alterar) las tablas
-necesarias. Alternativamente, podrías también explorar abstracciones más
-modernas como [Prisma](https://www.prisma.io/).
 
 ## 10. Definir estrategia de pruebas unitarias
 
