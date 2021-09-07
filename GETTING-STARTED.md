@@ -4,7 +4,7 @@ Una vez creado tu fork y clonado el repo en tu computadora, antes de poder
 comenzar a codear, tenemos primero que crear nuestro _entorno de desarrollo_.
 Para ello te recomendamos seguir los pasos a continuación:
 
-* [1. base de datos](#1-base-de-datos)
+* [1. Base de datos](#1-base-de-datos)
 * [2. Instalar `docker` y `docker-compose`](#2-instalar-docker-y-docker-compose)
 * [3. Configurar "servicio" de base de datos](#3-configurar-servicio-de-base-de-datos)
 * [4. Configurar conexión a BBDD en "servicio" node](#4-configurar-conexión-a-bbdd-en-servicio-node)
