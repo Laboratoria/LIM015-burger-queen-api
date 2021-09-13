@@ -8,6 +8,7 @@
   },
   "rules": {
     "no-underscore-dangle": "off",
+    "linebreak-style": ["error", "windows"], 
     "consistent-return": "off",
     "no-shadow": "off",
     "import/no-extraneous-dependencies": ["error", {"devDependencies": ["e2e/**/*.js", "**/*.spec.js"]}],
