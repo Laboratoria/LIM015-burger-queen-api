@@ -1,3 +1,6 @@
 node_modules/
 secrets.env
 docs
+
+#SECRETS
+.env
