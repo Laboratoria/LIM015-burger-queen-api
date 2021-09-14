@@ -18,12 +18,10 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
-  dateEntry: {
-    type: Date,
-    default: Date.now,
-  },
+},
+{
   timestamps: true,
-
+  versionKey: false,
 });
 
 module.exports = model('Product', productSchema);
