@@ -9,7 +9,6 @@ const {
   getUsers,
 } = require('../controller/users');
 
-
 const initAdminUser = (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
   if (!adminEmail || !adminPassword) {
