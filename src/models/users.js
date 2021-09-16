@@ -11,12 +11,14 @@ const userSchema = new Schema({
     type: String,
     require: true,
   },
-  roles: {
-    admin: {
-      type: Boolean,
-      // required: true,
-    },
-  },
+  roles: [{
+    ref: 'Role',
+    type: Schema.Types.ObjectId,
+  }],
+},
+{
+  timestamps: true,
+  versionKey: false,
 });
 
 userSchema.statics.encryptPassword = async (password) => {
