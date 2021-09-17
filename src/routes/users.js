@@ -6,7 +6,11 @@ const {
 } = require('../middleware/auth');
 
 const {
+  createUser,
   getUsers,
+  getUserById,
+  updateUserById,
+  deleteUserById,
 } = require('../controller/users');
 
 const initAdminUser = (app, next) => {
@@ -74,7 +78,8 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si no es ni admin
    */
-  app.get('/users', requireAdmin, getUsers);
+  // app.get('/users', requireAdmin, getUsers);
+  app.get('/users', getUsers);
 
   /**
    * @name GET /users/:uid
@@ -92,8 +97,10 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.get('/users/:uid', requireAuth, (req, resp) => {
-  });
+  // app.get('/users/:uid', requireAuth, (req, resp) => {
+  // });
+
+  app.get('/users/:uid', getUserById);
 
   /**
    * @name POST /users
@@ -114,8 +121,9 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si ya existe usuaria con ese `email`
    */
-  app.post('/users', requireAdmin, (req, resp, next) => {
-  });
+  // app.post('/users', requireAdmin, (req, resp, next) => {
+  // });
+  app.post('/users', createUser);
 
   /**
    * @name PUT /users
@@ -139,8 +147,10 @@ module.exports = (app, next) => {
    * @code {403} una usuaria no admin intenta de modificar sus `roles`
    * @code {404} si la usuaria solicitada no existe
    */
-  app.put('/users/:uid', requireAuth, (req, resp, next) => {
-  });
+  // app.put('/users/:uid', requireAuth, (req, resp, next) => {
+  // });
+
+  app.put('/users/:uid', updateUserById);
 
   /**
    * @name DELETE /users
@@ -158,8 +168,10 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.delete('/users/:uid', requireAuth, (req, resp, next) => {
-  });
+  // app.delete('/users/:uid', requireAuth, (req, resp, next) => {
+  // });
+
+  app.delete('/users/:uid', deleteUserById);
 
   initAdminUser(app, next);
 };
