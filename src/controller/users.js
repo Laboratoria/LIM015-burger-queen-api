@@ -1,28 +1,15 @@
 const User = require('../models/users');
 const Role = require('../models/roles');
-
-// const Role = require('../models/roles');
-
-// const config = require('../config');
-
-// const { secret } = config;
-
-// module.exports = {
-//   getUsers: async (req, resp) => {
-//     const products = await User.find();
-//     resp.json(products);
-//   },
-// };
-
-// module.exports = {
-//   getUserById: async (req, resp) => {
-//     const user = await User.findById(req.params.userId);
-//     resp.status(200).json(user);
-//   },
-// };
+const { isValidEmail, isValidPassword } = require('../utils/utils');
 
 const createUser = async (req, res) => {
   const { email, password, roles } = req.body;
+
+  /* validar que ingrese usuario y/o contraseña */
+  if (!email || !password) return res.status(400).json('Ingrese password y/o contraseña');
+
+  /* validar que el email y contraseña cumplan con lo requerido */
+  if (!isValidEmail(email) || !isValidPassword(password)) return res.status(400).json('Ingrese email y/o password validos');
 
   const newUser = new User({
     email,
