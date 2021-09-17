@@ -11,8 +11,8 @@ const createProduct = async (req, resp, next) => {
   resp.json(productSaved);
 };
 const getProducts = async (req, resp, next) => {
-  const allProduts = await Product.find()
-  resp.json(allProduts);
+  const allProducts = await Product.find();
+  resp.json(allProducts);
 };
 const getProductById = async (req, resp, next) => {
   const product = await Product.findById(req.params.productId);
@@ -20,13 +20,13 @@ const getProductById = async (req, resp, next) => {
 };
 const updateProductById = async (req, resp, next) => {
   const updatedProduct = await Product.findByIdAndUpdate(req.params.productId, req.body, {
-    new: true
+    new: true,
   });
   resp.status(200).json(updatedProduct);
 };
 const deleteProductById = async (req, resp, next) => {
-  const deletedProduct = await Product.findByIdAndDelete(req.params.productId);
-  resp.status(204).json('deleted');
+  const deletedUser = await Product.findByIdAndDelete(req.params.productId);
+  resp.status(200).json(deletedUser);
 };
 
 module.exports = {

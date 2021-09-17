@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const { Schema } = mongoose;
 
@@ -10,14 +11,27 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
+    unique: true,
     required: true,
   },
-  role: {
-    admin: {
-      type: Boolean,
-      required: true,
-    },
-  },
+  roles: [{
+    ref: 'Role',
+    type: Schema.Types.ObjectId,
+  }],
+}, {
+  timestamps: true,
+  versionKey: false,
 });
+
+userSchema.statics.encryptPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  const encryptedPassword = await bcrypt.hash(password, salt);
+  return encryptedPassword;
+};
+
+userSchema.statics.comparePassword = async (password, receivedPassword) => {
+  const comparedPassword = await bcrypt.compare(password, receivedPassword);
+  return comparedPassword;
+};
 
 module.exports = mongoose.model('User', userSchema);

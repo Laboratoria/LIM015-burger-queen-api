@@ -21,19 +21,9 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
-}, { 
+}, {
   timestamps: true,
   versionKey: false,
 });
 
-// const productSchema = new Schema({
-//   name: String,
-//   price: Number,
-//   image: String,
-//   type: String,
-// },
-// { timestamps: true });
-
 module.exports = mongoose.model('Product', productSchema);
-
-// export default model('Product', productSchema);
