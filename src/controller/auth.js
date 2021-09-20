@@ -2,8 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/Users');
 const { secret } = require('../config');
 
-
-const auth = async (req, resp, next) => {
+const auth = async (req, resp) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return resp.status(400).json('You didn´t enter email or password');

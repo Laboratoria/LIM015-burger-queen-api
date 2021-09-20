@@ -6,6 +6,7 @@ const {
   updateUserById,
   deleteUserById,
 } = require('../controller/users');
+const { authorization, isAdmin } = require('../middleware/auth');
 
 // const {
 //   requireAuth,
@@ -82,7 +83,7 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si no es ni admin
    */
-  app.get('/users', getUsers);
+  app.get('/users', authorization, isAdmin, getUsers);
 
   /**
    * @name GET /users/:uid
@@ -100,7 +101,7 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.get('/users/:uid', getUserById);
+  app.get('/users/:uid', authorization, getUserById);
 
   /**
    * @name POST /users
@@ -121,7 +122,7 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si ya existe usuaria con ese `email`
    */
-  app.post('/signUp', singUp);
+  app.post('/signUp', authorization, isAdmin, singUp);
   // app.post('/users', requireAdmin, (req, resp, next) => {
   // });
   /**
@@ -146,7 +147,7 @@ module.exports = (app, next) => {
    * @code {403} una usuaria no admin intenta de modificar sus `roles`
    * @code {404} si la usuaria solicitada no existe
    */
-  app.put('/users/:uid', updateUserById);
+  app.put('/users/:uid', authorization, updateUserById);
 
   /**
    * @name DELETE /users
@@ -164,7 +165,7 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.delete('/users/:uid', deleteUserById);
+  app.delete('/users/:uid', authorization, deleteUserById);
 
   initAdminUser(app, next);
 };

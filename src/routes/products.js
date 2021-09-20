@@ -37,7 +37,7 @@ module.exports = (app, nextMain) => {
    * @code {200} si la autenticación es correcta
    * @code {401} si no hay cabecera de autenticación
    */
-  app.get('/products', getProducts);
+  app.get('/products', authorization, getProducts);
 
   /**
    * @name GET /products/:productId
@@ -56,7 +56,7 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.get('/products/:productId', getProductById);
+  app.get('/products/:productId', authorization, getProductById);
 
   /**
    * @name POST /products

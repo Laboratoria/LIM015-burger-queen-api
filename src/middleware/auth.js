@@ -54,7 +54,7 @@ const authorization = async (req, resp, next) => {
     const { token } = req.headers;
     // validar que eltoken sea válido
     if (!token) {
-      resp.status(403).json({ message: 'No token provided' });
+      resp.status(401).json({ message: 'No token provided' });
     }
 
     const decoded = jwt.verify(token, secret);
@@ -82,4 +82,18 @@ const isAdmin = async (req, resp, next) => {
   });
 };
 
-module.exports = { authorization, isAdmin };
+const checkAdmin = async (req) => {
+  const user = await User.findById(req.userId);
+  const roles = await Role.find({ _id: { $in: user.roles } });
+  let admin = false;
+  roles.forEach((role) => {
+    if (role.name === 'admin') {
+      admin = true;
+    } else {
+      admin = false;
+    }
+  });
+  return admin;
+};
+
+module.exports = { authorization, isAdmin, checkAdmin };
