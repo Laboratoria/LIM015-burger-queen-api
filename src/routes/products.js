@@ -10,6 +10,7 @@ const {
   deleteProductById,
   updateProductById,
 } = require('../controller/products');
+const { authorization, isAdmin } = require('../middleware/auth');
 
 /** @module products */
 
@@ -79,7 +80,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.post('/products', createProduct);
+  app.post('/products', authorization, isAdmin, createProduct);
 
   /**
    * @name PUT /products
@@ -104,7 +105,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.put('/products/:productId', updateProductById);
+  app.put('/products/:productId', authorization, isAdmin, updateProductById);
 
   /**
    * @name DELETE /products
@@ -124,7 +125,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es ni admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.delete('/products/:productId', deleteProductById);
+  app.delete('/products/:productId', authorization, isAdmin, deleteProductById);
 
   nextMain();
 };

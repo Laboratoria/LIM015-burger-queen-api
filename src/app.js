@@ -20,7 +20,7 @@ app.set('pkg', pkg);
 // middlewares
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(authMiddleware(secret));
+// app.use(authMiddleware(secret));
 app.use(errorHandler);
 
 // Registrar rutas
