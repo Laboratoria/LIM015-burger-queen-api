@@ -22,7 +22,8 @@ const getProduct = async (req, res) => {
 
 const getProductById = async (req, res) => {
   const product = await Product.findById(req.params.productId);
-  res.status(200).json(product);
+  if (!product) return res.status(404).json('product id not found in database');
+  return res.status(200).json(product);
 };
 
 const updateProductById = async (req, res) => {

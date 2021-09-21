@@ -37,7 +37,7 @@ module.exports = (app, nextMain) => {
    */
   // app.get('/products', requireAuth, (req, resp, next) => {
   // });
-  app.get('/products', getProduct);
+  app.get('/products', requireAuth, getProduct);
 
   /**
    * @name GET /products/:productId
@@ -58,7 +58,7 @@ module.exports = (app, nextMain) => {
    */
   // app.get('/products/:productId', requireAuth, (req, resp, next) => {
   // });
-  app.get('/products/:productId', getProductById);
+  app.get('/products/:productId', requireAuth, getProductById);
 
   /**
    * @name POST /products

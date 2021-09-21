@@ -22,7 +22,8 @@ const initAdminUser = (app, next) => {
   const adminUser = {
     email: adminEmail,
     password: bcrypt.hashSync(adminPassword, 10),
-    roles: { admin: true },
+    // roles: { admin: true },
+    roles: ['user', 'admin'],
   };
 
   // TODO: crear usuaria admin
