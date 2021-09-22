@@ -39,7 +39,8 @@ const updateProductById = async (req, res) => {
   if (!product) return res.status(404).json('product id not found in database');
 
   /* validar que se indique propiedad a modificar */
-  if (Object.entries(req.body).length === 0 || typeof req.body.price !== 'number') return res.status(400).json('no ingreso dato a actualizar');
+
+  if ((Object.keys(req.body).length === 0) || req.body.name === '' || req.body.price === '' || req.body.image === '' || req.body.type === '') return res.status(400).json('indica dato a modificar');
 
   const updateProduct = await Product.findByIdAndUpdate(req.params.productId, req.body,
     { new: true });

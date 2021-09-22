@@ -80,7 +80,7 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin
    */
   // app.get('/users', requireAdmin, getUsers);
-  app.get('/users', getUsers);
+  app.get('/users', requireAdmin, getUsers);
 
   /**
    * @name GET /users/:uid
@@ -101,7 +101,7 @@ module.exports = (app, next) => {
   // app.get('/users/:uid', requireAuth, (req, resp) => {
   // });
 
-  app.get('/users/:uid', getUserById);
+  app.get('/users/:uid', requireAuth, getUserById);
 
   /**
    * @name POST /users
@@ -124,7 +124,7 @@ module.exports = (app, next) => {
    */
   // app.post('/users', requireAdmin, (req, resp, next) => {
   // });
-  app.post('/users', createUser);
+  app.post('/users', requireAdmin, createUser);
 
   /**
    * @name PUT /users
@@ -151,7 +151,7 @@ module.exports = (app, next) => {
   // app.put('/users/:uid', requireAuth, (req, resp, next) => {
   // });
 
-  app.put('/users/:uid', updateUserById);
+  app.put('/users/:uid', requireAuth, updateUserById);
 
   /**
    * @name DELETE /users
@@ -172,7 +172,7 @@ module.exports = (app, next) => {
   // app.delete('/users/:uid', requireAuth, (req, resp, next) => {
   // });
 
-  app.delete('/users/:uid', deleteUserById);
+  app.delete('/users/:uid', requireAuth, deleteUserById);
 
   initAdminUser(app, next);
 };

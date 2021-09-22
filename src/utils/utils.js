@@ -4,7 +4,8 @@ const isValidEmail = (email) => {
 };
 
 const isValidPassword = (email) => {
-  const emailRegExp = new RegExp(/^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$/g);
+  // Mínimo ocho caracteres, al menos una letra, un número y un carácter especial
+  const emailRegExp = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&.])[A-Za-z\d@$!%*#?&]{8,}$/g);
   return emailRegExp.test(email);
 };
 
