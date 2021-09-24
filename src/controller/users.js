@@ -40,8 +40,17 @@ const singUp = async (req, resp) => {
 };
 
 const getUsers = async (req, resp) => {
-  const allUsers = await User.find();
-  resp.status(200).json(allUsers);
+  const limit = parseInt(req.query.limit, 10) || 10;
+  const page = parseInt(req.query.page, 10) || 1;
+  const allUsers = await User.paginate({}, { limit, page });
+  const linkHeader = {
+    first: `http://localhost:8080/products?limit=${limit}&page=1`,
+    prev: allUsers.hasPrevPage ? `http://localhost:8080/products?limit=${limit}&page=${page - 1}` : false,
+    next: allUsers.hasNextPage ? `http://localhost:8080/products?limit=${limit}&page=${page + 1}` : false,
+    last: allUsers.totalPages ? `http://localhost:8080/products?limit=${limit}&page=${allUsers.totalPages}` : false,
+  };
+  // resp.status(200).json(allUsers);
+  resp.status(200).json(linkHeader);
 };
 
 const getUserById = async (req, resp) => {
@@ -60,13 +69,10 @@ const getUserById = async (req, resp) => {
   });
 };
 const updateUserById = async (req, resp) => {
-  if (Object.keys(req.body).length === 0) {
+  // console.log(Object.keys(req.body));
+  if ((Object.keys(req.body).length === 0) || req.body.email === '' || req.body.password === '') {
     resp.status(400).json({ message: 'You didn´t enter email or password' });
   } else {
-    // const updatedUser = await User.findByIdAndUpdate(req.params.uid, req.body, {
-    //   new: true,
-    // });
-    // resp.status(200).json(updatedUser);
     const user = await User.findById(req.params.uid);
     checkAdmin(req).then(async (admin) => {
       if ((admin === true) || (req.userId === req.params.uid)) {

@@ -13,10 +13,21 @@ const createProduct = async (req, resp) => {
   const productSaved = await newProduct.save();
   resp.status(200).json(productSaved);
 };
+
 const getProducts = async (req, resp) => {
-  const allProducts = await Product.find();
-  resp.json(allProducts);
+  const limit = parseInt(req.query.limit, 10) || 10;
+  const page = parseInt(req.query.page, 10) || 1;
+  const allProducts = await Product.paginate({}, { limit, page });
+  const linkHeader = {
+    first: `http://localhost:8080/products?limit=${limit}&page=1`,
+    prev: allProducts.hasPrevPage ? `http://localhost:8080/products?limit=${limit}&page=${page - 1}` : false,
+    next: allProducts.hasNextPage ? `http://localhost:8080/products?limit=${limit}&page=${page + 1}` : false,
+    last: allProducts.totalPages ? `http://localhost:8080/products?limit=${limit}&page=${allProducts.totalPages}` : false,
+  };
+  resp.status(200).json(linkHeader);
+  // resp.status(200).json(allProducts);
 };
+
 const getProductById = async (req, resp) => {
   const product = await Product.findById(req.params.productId);
   if (product === null) {
@@ -24,8 +35,9 @@ const getProductById = async (req, resp) => {
   }
   resp.status(200).json(product);
 };
+
 const updateProductById = async (req, resp) => {
-  if (Object.keys(req.body).length === 0) {
+  if ((Object.keys(req.body).length === 0) || req.body.name === '' || req.body.price === '' || req.body.image === '' || req.body.type === '') {
     resp.status(400).json({ message: 'You didn´t enter property to modify' });
   }
   const updatedProduct = await Product.findByIdAndUpdate(req.params.productId, req.body, {
@@ -36,6 +48,7 @@ const updateProductById = async (req, resp) => {
   }
   resp.status(200).json(updatedProduct);
 };
+
 const deleteProductById = async (req, resp) => {
   const deletedProduct = await Product.findByIdAndDelete(req.params.productId);
   if (deletedProduct === null) {
