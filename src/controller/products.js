@@ -1,4 +1,5 @@
 const Product = require('../models/products');
+const { isValidateObjectId } = require('../utils/utils');
 
 const createProduct = async (req, res) => {
   const {
@@ -21,19 +22,30 @@ const createProduct = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-  const products = await Product.find();
-  res.json(products);
+  // const url = `${req.protocol}://${req.get('host') + req.path}`; // http://localhost:8080/products
+  // console.log(url);
+  const limit = parseInt(req.query.limit, 10) || 10;
+  const page = parseInt(req.query.page, 10) || 1;
+  const products = await Product.paginate({}, { limit, page });
+
+  return res.json(products);
 };
 
 const getProductById = async (req, res) => {
-  /* validar que el producto exista */
-  const product = await Product.findById(req.params.productId);
-  if (!product) return res.status(404).json('product id not found in database');
-
-  return res.status(200).json(product);
+  /* Validar que el id tenga la estructura correcta */
+  if (isValidateObjectId(req.params.productId)) {
+    /* validar que el producto exista */
+    const product = await Product.findById(req.params.productId);
+    if (!product) return res.status(404).json('product id not found in database');
+    return res.status(200).json(product);
+  }
+  return res.status(404).json('Ingrese id valido');
 };
 
 const updateProductById = async (req, res) => {
+  /* Validar que el id tenga la estructura correcta */
+  if (!isValidateObjectId(req.params.productId)) return res.status(404).json('Ingrese id valido');
+
   /* validar que el producto exista */
   const product = await Product.findById(req.params.productId);
   if (!product) return res.status(404).json('product id not found in database');
@@ -48,6 +60,9 @@ const updateProductById = async (req, res) => {
 };
 
 const deleteProductById = async (req, res) => {
+  /* Validar que el id tenga la estructura correcta */
+  if (!isValidateObjectId(req.params.productId)) return res.status(404).json('Ingrese id valido');
+
   /* validar que el producto exista */
   const product = await Product.findById(req.params.productId);
   if (!product) return res.status(404).json('product id not found in database');

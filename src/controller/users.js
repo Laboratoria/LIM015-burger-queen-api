@@ -1,7 +1,9 @@
 const User = require('../models/users');
 const Role = require('../models/roles');
 const { isAdmin } = require('../middleware/auth');
-const { isValidEmail, isValidPassword } = require('../utils/utils');
+const {
+  isValidEmail, isValidPassword, idUserOrEmail,
+} = require('../utils/utils');
 
 const createUser = async (req, res) => {
   const { email, password, roles } = req.body;
@@ -40,14 +42,22 @@ const createUser = async (req, res) => {
 };
 
 const getUsers = async (req, resp) => {
-  const products = await User.find();
+  const limit = parseInt(req.query.limit, 10) || 10;
+  const page = parseInt(req.query.page, 10) || 1;
+  const products = await User.paginate({}, { limit, page });
   resp.json(products);
 };
 
 const getUserById = async (req, resp) => {
+  const { uid } = req.params;
+  const validar = idUserOrEmail(uid);
+  const user = await User.findOne(validar);
+
+  /* Validar que el id tenga la estructura correcta */
+  // if (!isValidateObjectId(req.params.uid)) return resp.status(404).json('Ingrese id valido');
+
   /* Valida si el id existe */
-  const user = await User.findById(req.params.uid);
-  if (!user) return resp.status(404).json('userId not found in database');
+  if (!user) return resp.status(404).json('user not found in database');
 
   /* validar que sea la misma usuaria y/o admin */
   if ((req.authToken.id === user._id.toString()) || (await isAdmin(req))) return resp.json(user);
@@ -55,31 +65,49 @@ const getUserById = async (req, resp) => {
 };
 
 const updateUserById = async (req, resp) => {
+  const { uid } = req.params;
+  const validar = idUserOrEmail(uid);
+  const userFind = await User.findOne(validar);
+  /* Validar que el id tenga la estructura correcta */
+  // if (!isValidateObjectId(req.params.uid)) return resp.status(404).json('Ingrese id valido');
+
   /* validar que el usuario exista */
-  const user = await User.findById(req.params.uid);
-  if (!user) return resp.status(404).json('user id not found in database');
+  // const user = await User.findById(req.params.uid);
+  if (!userFind) return resp.status(404).json('user not found in database');
 
   /* validar que se indique propiedad a modificar */
   if ((Object.keys(req.body).length === 0) || req.body.email === '' || req.body.password === '') return resp.status(400).json('indicar email y/o password a actualizar');
 
-  /* validar que sea la misma usuaria y/o admin */
-  if ((req.authToken.id === user._id.toString()) || (await isAdmin(req))) {
-    const updateUSer = await User.findByIdAndUpdate(req.params.uid, req.body,
+  /* encriptar password actualizado y devolver los datos actualizados. */
+  if (req.body.password) {
+    const passEncryp = await User.encryptPassword(req.body.password);
+    req.body.password = passEncryp;
+  }
+
+  if ((req.authToken.id === userFind._id.toString()) || (await isAdmin(req))) {
+    const updateUSer = await User.findByIdAndUpdate(userFind._id, req.body,
       { new: true });
-    resp.status(200).json(updateUSer);
+
+    return resp.status(200).json(updateUSer);
   }
 
   return resp.status(403).json('No tiene el rol de admin o no es su usuario a actualizar');
 };
 
 const deleteUserById = async (req, res) => {
-  /* validar que el usuario exista */
-  const user = await User.findById(req.params.uid);
-  if (!user) return res.status(404).json('user id not found in database');
+  const { uid } = req.params;
+  const validar = idUserOrEmail(uid);
+  const userFound = await User.findOne(validar);
+  /* Validar que el id tenga la estructura correcta */
+  // if (!isValidateObjectId(req.params.uid)) return res.status(404).json('Ingrese id valido');
 
+  /* validar que el usuario exista */
+  // const user = await User.findById(req.params.uid);
+  if (!userFound) return res.status(404).json('user id not found in database');
   /* validar que sea la misma usuaria y/o admin */
-  if ((req.authToken.id === user._id.toString()) || (await isAdmin(req))) {
-    const userDeleted = await User.findByIdAndDelete(req.params.uid);
+  if ((req.authToken.id === userFound._id.toString()) || (await isAdmin(req))) {
+    // const userDeleted = await User.findByIdAndDelete(req.params.uid);
+    const userDeleted = await User.findByIdAndDelete(userFound._id);
     return res.status(200).json(userDeleted);
   }
   return res.status(403).json('No tiene el rol de admin o no es su usuario a eliminar');

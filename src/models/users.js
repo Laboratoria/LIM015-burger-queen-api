@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 const bcrypt = require('bcrypt');
 
 const userSchema = new Schema({
@@ -29,4 +30,5 @@ userSchema.statics.encryptPassword = async (password) => {
 // eslint-disable-next-line max-len
 userSchema.statics.comparePassword = async (password, receivedPassword) => bcrypt.compare(password, receivedPassword);
 
+userSchema.plugin(mongoosePaginate);
 module.exports = model('User', userSchema);
