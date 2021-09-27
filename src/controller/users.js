@@ -78,6 +78,8 @@ const updateUserById = async (req, resp) => {
   /* validar que se indique propiedad a modificar */
   if ((Object.keys(req.body).length === 0) || req.body.email === '' || req.body.password === '') return resp.status(400).json('indicar email y/o password a actualizar');
 
+  /* usuario no puede modificar sus roles. */
+  if (!await isAdmin(req) && (req.authToken.id === userFind._id.toString()) && req.body.roles) return resp.status(403).json('no puede modificar sus roles');
   /* encriptar password actualizado y devolver los datos actualizados. */
   if (req.body.password) {
     const passEncryp = await User.encryptPassword(req.body.password);
