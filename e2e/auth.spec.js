@@ -1,8 +1,6 @@
-const config = require('../config');
-
+const config = require('../src/config');
 
 const { fetch, fetchWithAuth } = process;
-
 
 describe('POST /auth', () => {
   it('should respond with 400 when email and password missing', () => (
@@ -13,7 +11,7 @@ describe('POST /auth', () => {
   it('should respond with 400 when email is missing', () => (
     fetch('/auth', {
       method: 'POST',
-      body: { email: '', password: 'xxxx' },
+      body: { email: '', password: '12345678' },
     })
       .then((resp) => expect(resp.status).toBe(400))
   ));
@@ -29,9 +27,12 @@ describe('POST /auth', () => {
   it('fail with 404 credentials dont match', () => (
     fetch('/auth', {
       method: 'POST',
-      body: { email: `foo-${Date.now()}@bar.baz`, password: 'xxxx' },
+      body: { email: `foo-${Date.now()}@bar.baz`, password: 'hfjdksla' },
     })
-      .then((resp) => expect(resp.status).toBe(404))
+      .then((resp) => {
+        console.info(resp);
+        expect(resp.status).toBe(404);
+      })
   ));
 
   it('should create new auth token and allow access using it', () => (

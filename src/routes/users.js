@@ -1,4 +1,7 @@
+// const bcrypt = require('bcrypt');
 const bcrypt = require('bcrypt');
+const User = require('../models/Users');
+const Role = require('../models/Roles');
 const {
   getUsers,
   singUp,
@@ -23,14 +26,48 @@ const initAdminUser = (app, next) => {
     return next();
   }
 
+  // const adminUser = {
+  //   email: adminEmail,
+  //   password: bcrypt.hashSync(adminPassword, 10),
+  //   roles: { admin: true },
+  // };
   const adminUser = {
     email: adminEmail,
     password: bcrypt.hashSync(adminPassword, 10),
-    roles: { admin: true },
+    roles: ['admin', 'user'],
   };
 
-  // TODO: crear usuaria admin
+  // crear usuaria admin
+  const searchUser = User.findOne({ email: adminEmail });
+
+  searchUser
+    .then((doc) => {
+      // console.log(doc);
+      if (doc) {
+        // console.info('User admin already exists');
+        return next(200);
+      }
+
+      const rolesAdmin = adminUser.roles;
+      const foundRoles = Role.find({ name: { $in: rolesAdmin } }); // $in todas las coincidencias
+      foundRoles
+        .then((doc) => {
+          adminUser.roles = doc.map((role) => role._id);
+
+          const admin = new User(adminUser);
+          admin.save();
+          console.info('admin user created');
+          next();
+        });
+    })
+    .catch((error) => {
+      if (error !== 200) {
+        console.info('Error', error);
+      }
+    });
   next();
+
+  // TODO: crear usuaria admin
 };
 
 /*

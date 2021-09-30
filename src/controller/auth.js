@@ -12,7 +12,7 @@ const auth = async (req, resp) => {
   // const passwordFpound = await User.findOne({password: req.body.password});
 
   if (!userFound) {
-    return resp.status(400).json('user not found');
+    return resp.status(404).json('user not found');
   }
   const matchPassword = await User.comparePassword(req.body.password, userFound.password);
   if (!matchPassword) {

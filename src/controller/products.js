@@ -9,10 +9,10 @@ const createProduct = async (req, resp) => {
     name, price, image, type,
   });
   if (!name || !price) {
-    resp.status(400).json({ message: 'You didn´t enter name or price' });
+    return resp.status(400).json({ message: 'You didn´t enter name or price' });
   }
   const productSaved = await newProduct.save();
-  resp.status(200).json(productSaved);
+  return resp.status(200).json(productSaved);
 };
 
 const getProducts = async (req, resp) => {
@@ -26,6 +26,7 @@ const getProducts = async (req, resp) => {
     last: allProducts.totalPages ? `http://localhost:8080/products?limit=${limit}&page=${allProducts.totalPages}` : false,
   };
   // resp.status(200).json(linkHeader);
+  resp.links(linkHeader);
   resp.status(200).json(allProducts);
 };
 
@@ -34,30 +35,28 @@ const getProductById = async (req, resp) => {
   if (validation === true) {
     const product = await Product.findById(req.params.productId);
     if (product === null) {
-      resp.status(404).json({ message: 'The product doesn´t exist' });
+      return resp.status(404).json({ message: 'The product doesn´t exist' });
     }
-    resp.status(200).json(product);
-  } else {
-    resp.status(404).json({ message: 'Id format is invalid' });
+    return resp.status(200).json(product);
   }
+  return resp.status(404).json({ message: 'Id format is invalid' });
 };
 
 const updateProductById = async (req, resp) => {
   const validation = verifyId(req.params.productId);
   if (validation === true) {
     if ((Object.keys(req.body).length === 0) || req.body.name === '' || req.body.price === '' || req.body.image === '' || req.body.type === '') {
-      resp.status(400).json({ message: 'You didn´t enter property to modify' });
+      return resp.status(400).json({ message: 'You didn´t enter property to modify' });
     }
     const updatedProduct = await Product.findByIdAndUpdate(req.params.productId, req.body, {
       new: true,
     });
     if (updatedProduct === null) {
-      resp.status(404).json({ message: 'The product doesn´t exist' });
+      return resp.status(404).json({ message: 'The product doesn´t exist' });
     }
-    resp.status(200).json(updatedProduct);
-  } else {
-    resp.status(404).json({ message: 'Id format is invalid' });
+    return resp.status(200).json(updatedProduct);
   }
+  return resp.status(404).json({ message: 'Id format is invalid' });
 };
 
 const deleteProductById = async (req, resp) => {
@@ -65,12 +64,11 @@ const deleteProductById = async (req, resp) => {
   if (validation === true) {
     const deletedProduct = await Product.findByIdAndDelete(req.params.productId);
     if (deletedProduct === null) {
-      resp.status(404).json({ message: 'The product doesn´t exist' });
+      return resp.status(404).json({ message: 'The product doesn´t exist' });
     }
-    resp.status(200).json(deletedProduct);
-  } else {
-    resp.status(404).json({ message: 'Id format is invalid' });
+    return resp.status(200).json(deletedProduct);
   }
+  return resp.status(404).json({ message: 'Id format is invalid' });
 };
 
 module.exports = {

@@ -3,7 +3,11 @@
 // } = require('../middleware/auth');
 
 const {
-  createOrder, getOrders, getOrderById, uptadeOrderById, deleteProduct, deleteOrder, deleteOrderById,
+  createOrder,
+  getOrders,
+  getOrderById,
+  uptadeOrderById,
+  deleteOrderById,
 } = require('../controller/orders');
 const { authorization } = require('../middleware/auth');
 

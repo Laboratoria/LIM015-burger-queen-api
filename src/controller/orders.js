@@ -37,6 +37,7 @@ const getOrders = async (req, resp) => {
     last: allOrders.totalPages ? `http://localhost:8080/products?limit=${limit}&page=${allOrders.totalPages}` : false,
   };
   //   console.log(linkHeader);
+  resp.links(linkHeader);
   resp.status(200).json(allOrders);
 };
 

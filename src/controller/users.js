@@ -48,6 +48,7 @@ const getUsers = async (req, resp) => {
     next: allUsers.hasNextPage ? `http://localhost:8080/products?limit=${limit}&page=${page + 1}` : false,
     last: allUsers.totalPages ? `http://localhost:8080/products?limit=${limit}&page=${allUsers.totalPages}` : false,
   };
+  resp.links(linkHeader);
   resp.status(200).json(allUsers);
   // resp.status(200).json(linkHeader);
 };
@@ -57,17 +58,16 @@ const getUserById = async (req, resp) => {
   if (validation !== false) {
     const user = await User.findOne(validation);
     if (user === null) {
-      resp.status(404).json({ message: 'The user doesn´t exist' });
+      return resp.status(404).json({ message: 'The user doesn´t exist' });
     }
     checkAdmin(req).then(async (admin) => {
       if ((admin === true) || (req.userId === user.id)) {
-        resp.status(200).json(user);
-      } else {
-        resp.status(403).json('you need the admin role');
+        return resp.status(200).json(user);
       }
+      return resp.status(403).json({ message: 'you need the admin role' });
     });
   } else {
-    resp.status(404).json({ message: 'Email o id format is invalid' });
+    return resp.status(404).json({ message: 'Email o id format is invalid' });
   }
 };
 
@@ -88,7 +88,7 @@ const updateUserById = async (req, resp) => {
             req.body.password = encryptPassword;
           }
           if (admin === false && req.body.roles) {
-            resp.status(403).json('you need the admin role');
+            resp.status(403).json({ message: 'you need the admin role' });
           }
           const updatedUser = await User.findByIdAndUpdate(user.id, req.body, {
             new: true,

@@ -54,7 +54,7 @@ const authorization = async (req, resp, next) => {
     const { token } = req.headers;
     // validar que eltoken sea válido
     if (!token) {
-      resp.status(401).json({ message: 'No token provided' });
+      return resp.status(401).json({ message: 'No token provided' });
     }
 
     const decoded = jwt.verify(token, secret);
@@ -66,7 +66,7 @@ const authorization = async (req, resp, next) => {
     // }
     next();
   } catch (error) {
-    resp.status(401).json({ mesagge: 'invalid token' });
+    return resp.status(401).json({ mesagge: 'invalid token' });
   }
 };
 
