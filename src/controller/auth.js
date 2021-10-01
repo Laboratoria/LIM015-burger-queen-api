@@ -14,11 +14,11 @@ const authenthicateUser = async (req, res) => {
 
   /* validar si el usuario existe */
   const userFound = await User.findOne({ email });
-  if (!userFound) return res.status(400).json('user not found');
+  if (!userFound) return res.status(404).json('user not found');
 
   /* Validar si el pass coincide */
   const matchPassword = await User.comparePassword(password, userFound.password);
-  if (!matchPassword) return res.status(400).json({ token: null, message: 'Invalid Password' });
+  if (!matchPassword) return res.status(404).json({ token: null, message: 'Invalid Password' });
 
   /* Devuelve el token del usuario autenticado correctamente */
   const token = jwt.sign({ id: userFound._id }, secret, { expiresIn: 86400 });

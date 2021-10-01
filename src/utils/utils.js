@@ -23,6 +23,16 @@ const idUserOrEmail = (parameter) => {
   return { email: parameter };
 };
 
+const pagination = (data, url, limit, page, totalPages) => {
+  const linkHeader = {
+    first: `${url}?limit=${limit}&page=1`,
+    prev: data.hasPrevPage ? `${url}?limit=${limit}&page=${page - 1}` : `${url}?limit=${limit}&page=${page}`,
+    next: data.hasNextPage ? `${url}?limit=${limit}&page=${page + 1}` : `${url}?limit=${limit}&page=${totalPages}`,
+    last: `${url}?limit=${limit}&page=${totalPages}`,
+  };
+  return linkHeader;
+};
+
 module.exports = {
-  isValidEmail, isValidPassword, isValidateObjectId, idUserOrEmail,
+  isValidEmail, isValidPassword, isValidateObjectId, idUserOrEmail, pagination,
 };

@@ -1,5 +1,5 @@
 const Product = require('../models/products');
-const { isValidateObjectId } = require('../utils/utils');
+const { isValidateObjectId, pagination } = require('../utils/utils');
 
 const createProduct = async (req, res) => {
   const {
@@ -10,6 +10,7 @@ const createProduct = async (req, res) => {
     // return next(400);
     return res.status(400).json('indicar nombre o precio');
   }
+
   const newProduct = new Product({
     name, price, image, type,
   });
@@ -17,18 +18,17 @@ const createProduct = async (req, res) => {
   const productSave = await newProduct.save();
   // productSave.then((e) => res.json(e));
   res.status(200).json(productSave);
-  // console.log(productSave);
-  // res.json(req.body);
 };
 
 const getProduct = async (req, res) => {
-  // const url = `${req.protocol}://${req.get('host') + req.path}`; // http://localhost:8080/products
-  // console.log(url);
+  const url = `${req.protocol}://${req.get('host') + req.path}`; // http://localhost:8080/products
   const limit = parseInt(req.query.limit, 10) || 10;
   const page = parseInt(req.query.page, 10) || 1;
   const products = await Product.paginate({}, { limit, page });
+  const links = pagination(products, url, products.limit, products.page, products.totalPages);
 
-  return res.json(products);
+  res.links(links);
+  return res.status(200).json(products.docs);
 };
 
 const getProductById = async (req, res) => {
@@ -52,7 +52,7 @@ const updateProductById = async (req, res) => {
 
   /* validar que se indique propiedad a modificar */
 
-  if ((Object.keys(req.body).length === 0) || req.body.name === '' || req.body.price === '' || req.body.image === '' || req.body.type === '') return res.status(400).json('indica dato a modificar');
+  if ((Object.keys(req.body).length === 0) || req.body.name === '' || req.body.price === '' || req.body.image === '' || req.body.type === '' || typeof req.body.price !== 'number') return res.status(400).json('indica dato a modificar');
 
   const updateProduct = await Product.findByIdAndUpdate(req.params.productId, req.body,
     { new: true });

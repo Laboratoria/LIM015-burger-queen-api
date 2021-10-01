@@ -37,31 +37,33 @@ module.exports.isAuthenticated = (req) => {
   if (req.authToken) return true;
   return false;
 };
+// => req.authToken || false;
 
 module.exports.isAdmin = async (req) => {
   const user = await User.findById(req.authToken.id);
   const roles = await Role.find({ _id: { $in: user.roles } });
   const nameRoles = roles.map((el) => el.name);
   return nameRoles.includes('admin');
-
-  /* [
-  { _id: new ObjectId("61426843502652acad3049e8"), name: 'user' },
-  { _id: new ObjectId("61426843502652acad3049ea"), name: 'admin' }
-] */
 };
 
-module.exports.requireAuth = (req, resp, next) => (
-  (!module.exports.isAuthenticated(req))
-    ? next(401)
-    : next()
-);
+module.exports.requireAuth = (req, resp, next) => {
+  if (!module.exports.isAuthenticated(req)) resp.status(401).json({ message: 'requiere autenticacion' });
+  return next();
+};
+//  (
+//   (!module.exports.isAuthenticated(req))
+//     ? next(401)
+//     : next()
+// );
 
 module.exports.requireAdmin = (req, resp, next) => {
   if (!module.exports.isAuthenticated(req)) {
-    return next(401);
+    // return next(401);
+    return resp.status(401).json({ message: 'requiere autenticacion' });
   } (module.exports.isAdmin(req)).then((res) => {
     if (!res) {
-      return resp.status(403).json({ message: 'Requiere rol de administrador' });
+      // return next(403);
+      return resp.status(403).json({ message: 'requires administrator role' });
     }
     return next();
   });

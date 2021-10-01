@@ -5,7 +5,7 @@ const { dbUrl } = config;
 
 // TODO: Conexión a la Base de Datos (MongoDB o MySQL)
 
-console.log(dbUrl);
+// console.log(dbUrl);
 const URL = dbUrl;
 
 mongoose.connect(URL);
@@ -14,7 +14,7 @@ mongoose.connect(URL);
 const { connection } = mongoose;
 
 connection.once('open', () => {
-  console.log('DB is connected');
+  // console.log('DB is connected');
 });
 
 // mongoose

@@ -10,12 +10,12 @@ const orderSchema = new Schema({
     type: String,
     required: true,
   },
-  product: [{
-    quantity: {
+  products: [{
+    qty: {
       type: Number,
       required: true,
     },
-    productId: {
+    product: {
       ref: 'Product',
       type: Schema.Types.ObjectId,
       required: true,
@@ -30,10 +30,10 @@ const orderSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  // dateProcessed: {
-  //   type: Date,
-  //   required: true,
-  // },
+  dateProcessed: {
+    type: Date,
+    default: Date.now,
+  },
 },
 {
   timestamps: true,
