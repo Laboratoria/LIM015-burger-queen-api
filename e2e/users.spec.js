@@ -1,7 +1,6 @@
 const url = require('url');
 const qs = require('querystring');
-const config = require('../config');
-
+const config = require('../src/config');
 
 const {
   fetch,
@@ -10,13 +9,11 @@ const {
   fetchWithAuth,
 } = process;
 
-
 const parseLinkHeader = (str) => str.split(',')
   .reduce((memo, item) => {
     const [, value, key] = /^<(.*)>;\s+rel="(first|last|prev|next)"/.exec(item.trim());
     return { ...memo, [key]: value };
   }, {});
-
 
 describe('GET /users', () => {
   it('should fail with 401 when no auth', () => (
