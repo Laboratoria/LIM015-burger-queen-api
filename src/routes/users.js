@@ -17,6 +17,7 @@ const {
 
 const initAdminUser = (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
+  /* istanbul ignore next */
   if (!adminEmail || !adminPassword) {
     return next();
   }
@@ -32,25 +33,30 @@ const initAdminUser = (app, next) => {
 
   searchUser
     .then((doc) => {
-      // console.log(doc);
+      /* istanbul ignore next */
       if (doc) {
-        // console.info('User admin already exists');
         return next(200);
       }
-
+      /* istanbul ignore next */
       const rolesAdmin = adminUser.roles;
+      /* istanbul ignore next */
       const foundRoles = Role.find({ name: { $in: rolesAdmin } }); // $in todas las coincidencias
+      /* istanbul ignore next */
       foundRoles
         .then((doc) => {
           adminUser.roles = doc.map((role) => role._id);
-
+          /* istanbul ignore next */
           const admin = new User(adminUser);
+          /* istanbul ignore next */
           admin.save();
+          /* istanbul ignore next */
           console.info('admin user created');
+          /* istanbul ignore next */
           next();
         });
     })
     .catch((error) => {
+      /* istanbul ignore next */
       if (error !== 200) {
         console.info('Error', error);
       }

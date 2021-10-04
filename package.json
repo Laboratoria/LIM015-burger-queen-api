@@ -9,8 +9,8 @@
   "scripts": {
     "pretest": "eslint .",
     "start": "nodemon src/index.js",
-    "test:e2e": "jest --verbose --testPathPattern e2e --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
-    "test:unit": "jest --verbose --testPathIgnorePatterns e2e",
+    "test:e2e": "jest --verbose --testPathPattern e2e --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand --coverage",
+    "test:unit": "jest --verbose --testPathIgnorePatterns e2e --coverage",
     "test": "npm run test:e2e && npm run test:unit",
     "lint": "eslint .",
     "docs:generate": "jsdoc -c jsdoc.conf --readme README-docs.md",
@@ -39,6 +39,7 @@
     "jsdoc": "^3.6.6",
     "jsdoc-http-plugin": "^0.3.2",
     "node-fetch": "^2.6.1",
+    "supertest": "^6.1.6",
     "tree-kill": "^1.2.2"
   }
 }

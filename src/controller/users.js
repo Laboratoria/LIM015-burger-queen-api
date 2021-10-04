@@ -64,10 +64,10 @@ const getUserById = async (req, resp) => {
   if (!user) return resp.status(404).json('user not found in database');
 
   /* validar que sea la misma usuaria y/o admin */
-  if ((req.authToken.id === user._id.toString()) || (await isAdmin(req))) {
-    return resp.status(200).json(user);
+  if (req.authToken.id !== user._id.toString() && !await isAdmin(req)) {
+    return resp.status(403).json('No tiene el rol de admin o no es su usuario a buscar');
   }
-  return resp.status(403).json('No tiene el rol de admin o no es su usuario a buscar');
+  return resp.status(200).json(user);
 };
 
 const updateUserById = async (req, resp) => {

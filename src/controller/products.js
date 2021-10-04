@@ -17,7 +17,7 @@ const createProduct = async (req, res) => {
 
   const productSave = await newProduct.save();
   // productSave.then((e) => res.json(e));
-  res.status(200).json(productSave);
+  return res.status(200).json(productSave);
 };
 
 const getProduct = async (req, res) => {
@@ -56,7 +56,7 @@ const updateProductById = async (req, res) => {
 
   const updateProduct = await Product.findByIdAndUpdate(req.params.productId, req.body,
     { new: true });
-  res.status(200).json(updateProduct);
+  return res.status(200).json(updateProduct);
 };
 
 const deleteProductById = async (req, res) => {
@@ -68,7 +68,7 @@ const deleteProductById = async (req, res) => {
   if (!product) return res.status(404).json('product id not found in database');
 
   await Product.findByIdAndDelete(req.params.productId);
-  res.status(200).json(product);
+  return res.status(200).json(product);
 };
 
 module.exports = {

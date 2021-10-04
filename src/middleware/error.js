@@ -5,22 +5,25 @@ const httpErrors = {
   404: 'Not found',
   500: 'Internal server error',
 };
-
+/* istanbul ignore next */
 const isKnownHTTPErrorStatus = (num) => (
   typeof num === 'number' && Object.keys(httpErrors).indexOf(`${num}`) >= 0
 );
 
 // eslint-disable-next-line no-unused-vars
 module.exports = (err, req, resp, next) => {
+  /* istanbul ignore next */
   const statusCode = (isKnownHTTPErrorStatus(err))
     ? err
     : err.statusCode || 500;
+    /* istanbul ignore next */
   const message = err.message || httpErrors[statusCode] || err;
-
+  /* istanbul ignore next */
   if (statusCode === 500) {
     console.error(statusCode, message);
   }
-
+  /* istanbul ignore next */
   resp.status(statusCode).json({ statusCode, message });
+  /* istanbul ignore next */
   next();
 };

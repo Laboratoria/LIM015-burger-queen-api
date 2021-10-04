@@ -4,10 +4,11 @@ const { isValidateObjectId, pagination } = require('../utils/utils');
 const createOrder = async (req, res) => {
   const { userId, client, products } = req.body;
 
-  if (!products || products.length === 0) {
+  if (Object.keys(req.body).length === 0 || !products || products.length === 0) {
     // return next(400);
     return res.status(400).json('ingresar producto');
   }
+  if (!userId) return res.status(400).json('ingresar userId');
 
   const newOrder = new Orders({
     userId,
@@ -43,7 +44,7 @@ const getOrderById = async (req, res) => {
   }
   /* validar que el producto exista */
   const order = await Orders.findOne({ _id: req.params.orderId }).populate('products.product');
-  if (!order) return res.status(404).json('product id not found in database');
+  if (!order) return res.status(404).json('order id not found in database');
   return res.status(200).json(order);
 };
 
@@ -53,7 +54,7 @@ const updateOrderById = async (req, res) => {
 
   /* validar que el producto exista */
   const order = await Orders.findById(req.params.orderId);
-  if (!order) return res.status(404).json('product id not found in database');
+  if (!order) return res.status(404).json('order id not found in database');
 
   if ((Object.keys(req.body).length === 0)) return res.status(400).json('indica dato a modificar');
 
@@ -77,7 +78,7 @@ const deleteOrderById = async (req, res) => {
 
   /* validar que el producto exista */
   const order = await Orders.findById(req.params.orderId);
-  if (!order) return res.status(404).json('product id not found in database');
+  if (!order) return res.status(404).json('order id not found in database');
 
   await Orders.findByIdAndDelete(req.params.orderId);
   return res.status(200).json(order);

@@ -7,7 +7,6 @@ module.exports = (secret) => (req, resp, next) => {
 
   if (!authorization) {
     return next();
-    // return resp.status(401).json('no se ingreso cabecera');
   }
 
   const [type, token] = authorization.split(' ');
@@ -47,14 +46,9 @@ module.exports.isAdmin = async (req) => {
 };
 
 module.exports.requireAuth = (req, resp, next) => {
-  if (!module.exports.isAuthenticated(req)) resp.status(401).json({ message: 'requiere autenticacion' });
+  if (!module.exports.isAuthenticated(req)) return resp.status(401).json({ message: 'requiere autenticacion' });
   return next();
 };
-//  (
-//   (!module.exports.isAuthenticated(req))
-//     ? next(401)
-//     : next()
-// );
 
 module.exports.requireAdmin = (req, resp, next) => {
   if (!module.exports.isAuthenticated(req)) {
