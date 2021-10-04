@@ -1,6 +1,7 @@
 node_modules/
 secrets.env
 docs
+
 coverage
 #SECRETS
 .env
