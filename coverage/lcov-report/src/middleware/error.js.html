@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/10</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/10</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -83,7 +83,8 @@
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -91,23 +92,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const httpErrors = {
   400: 'Bad request',
@@ -116,24 +118,25 @@
   404: 'Not found',
   500: 'Internal server error',
 };
-&nbsp;
-const isKnownHTTPErrorStatus = <span class="fstat-no" title="function not covered" >(n</span>um) =&gt; (
-<span class="cstat-no" title="statement not covered" >  typeof num === 'number' &amp;&amp; Object.keys(httpErrors).indexOf(`${num}`) &gt;= 0</span>
+/* istanbul ignore next */
+const isKnownHTTPErrorStatus = (num) =&gt; (
+  typeof num === 'number' &amp;&amp; Object.keys(httpErrors).indexOf(`${num}`) &gt;= 0
 );
 &nbsp;
+/* istanbul ignore next */
 // eslint-disable-next-line no-unused-vars
-module.exports = <span class="fstat-no" title="function not covered" >(e</span>rr, req, resp, next) =&gt; {
-  const statusCode = <span class="cstat-no" title="statement not covered" >(isKnownHTTPErrorStatus(err))</span>
+module.exports = (err, req, resp, next) =&gt; {
+  const statusCode = (isKnownHTTPErrorStatus(err))
     ? err
     : err.statusCode || 500;
-  const message = <span class="cstat-no" title="statement not covered" >err.message || httpErrors[statusCode] || err;</span>
+  const message = err.message || httpErrors[statusCode] || err;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (statusCode === 500) {</span>
-<span class="cstat-no" title="statement not covered" >    console.error(statusCode, message);</span>
+  if (statusCode === 500) {
+    console.error(statusCode, message);
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  resp.status(statusCode).json({ statusCode, message });</span>
-<span class="cstat-no" title="statement not covered" >  next();</span>
+  resp.status(statusCode).json({ statusCode, message });
+  next();
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -142,7 +145,7 @@ module.exports = <span class="fstat-no" title="function not covered" >(e</span>r
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Sep 29 2021 22:03:28 GMT-0500 (GMT-05:00)
+                at Sun Oct 03 2021 21:06:44 GMT-0500 (GMT-05:00)
             </div>
         </div>
         <script src="../../prettify.js"></script>

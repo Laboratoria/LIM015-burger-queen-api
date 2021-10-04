@@ -5,14 +5,13 @@ const { secret } = require('../config');
 const auth = async (req, resp) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return resp.status(400).json('You didn´t enter email or password');
+    return resp.status(400).json({ message: 'You didn´t enter email or password' });
   }
 
   const userFound = await User.findOne({ email: req.body.email });
-  // const passwordFpound = await User.findOne({password: req.body.password});
 
   if (!userFound) {
-    return resp.status(404).json('user not found');
+    return resp.status(404).json({ mesagge: 'user not found' });
   }
   const matchPassword = await User.comparePassword(req.body.password, userFound.password);
   if (!matchPassword) {

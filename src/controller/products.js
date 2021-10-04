@@ -25,9 +25,8 @@ const getProducts = async (req, resp) => {
     next: allProducts.hasNextPage ? `http://localhost:8080/products?limit=${limit}&page=${page + 1}` : false,
     last: allProducts.totalPages ? `http://localhost:8080/products?limit=${limit}&page=${allProducts.totalPages}` : false,
   };
-  // resp.status(200).json(linkHeader);
   resp.links(linkHeader);
-  resp.status(200).json(allProducts);
+  resp.status(200).json(allProducts.docs);
 };
 
 const getProductById = async (req, resp) => {

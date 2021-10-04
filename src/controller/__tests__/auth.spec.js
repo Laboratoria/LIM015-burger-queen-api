@@ -9,28 +9,50 @@ beforeAll(async () => {
 });
 
 const user = {
-  email: 'usertest@gmail.com',
+  email: 'user@test.com',
   password: 'usertest',
 };
 
 const badUser = {
-  email: 'usertest@gmail.com',
+  email: 'user@test.com',
 };
 
-describe('GET /products', () => {
+describe('GET /auth', () => {
   it('Should return a token', (done) => {
     request(app)
       .post('/auth')
       .send(user)
       .set('Accept', 'application/json')
-      .expect(200, done);
+      .expect(200)
+      .then((res) => {
+        expect(typeof res.body).toBe('object');
+        // eslint-disable-next-line no-prototype-builtins
+        expect(res.body.hasOwnProperty('token')).toBe(true);
+        done();
+      });
   });
-  it('If email or price is not indicated, it should fail with status 400', (done) => {
+  it('If email or password is not indicated, it should fail with status 400', (done) => {
     request(app)
       .post('/auth')
       .send(badUser)
       .set('Accept', 'application/json')
-    //   .expect({ message: 'You didn´t enter email or password' })
+      .expect({ message: 'You didn´t enter email or password' })
       .expect(400, done);
+  });
+  it('If user not found, it should fail with status 404', (done) => {
+    request(app)
+      .post('/auth')
+      .send({ email: 'fakeuser@gmail.com', password: 'password' })
+      .set('Accept', 'application/json')
+      .expect({ mesagge: 'user not found' })
+      .expect(404, done);
+  });
+  it('If the password does not match, it should fail with status 404', (done) => {
+    request(app)
+      .post('/auth')
+      .send({ email: 'user@test.com', password: 'fakepassword' })
+      .set('Accept', 'application/json')
+      .expect({ token: null, message: 'Invalid password' })
+      .expect(401, done);
   });
 });

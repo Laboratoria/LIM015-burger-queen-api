@@ -6,8 +6,8 @@ const createOrder = async (req, resp) => {
   const {
     userId, client, status, products,
   } = req.body;
-  if (!products || products.length === 0) {
-    resp.status(400).json({ message: 'You don´t enter products' });
+  if (!userId || !products || products.length === 0) {
+    resp.status(400).json({ message: 'You don´t enter products or userId' });
   } else {
     const newOrder = new Order({
       userId, client, status, products,
@@ -36,9 +36,8 @@ const getOrders = async (req, resp) => {
     next: allOrders.hasNextPage ? `http://localhost:8080/products?limit=${limit}&page=${page + 1}` : false,
     last: allOrders.totalPages ? `http://localhost:8080/products?limit=${limit}&page=${allOrders.totalPages}` : false,
   };
-  //   console.log(linkHeader);
   resp.links(linkHeader);
-  resp.status(200).json(allOrders);
+  resp.status(200).json(allOrders.docs);
 };
 
 const getOrderById = async (req, resp) => {
@@ -46,37 +45,32 @@ const getOrderById = async (req, resp) => {
   if (validation === true) {
     const order = await Order.findById(req.params.orderId).populate('products.product');
     if (order === null) {
-      resp.status(404).json({ message: 'The order doesn´t exist' });
-    } else {
-      resp.status(200).json(order);
+      return resp.status(404).json({ message: 'The order doesn´t exist' });
     }
-  } else {
-    resp.status(404).json('Id format is invalid');
+    return resp.status(200).json(order);
   }
+  return resp.status(404).json({ message: 'Id format is invalid' });
 };
 
 const uptadeOrderById = async (req, resp) => {
   const validation = verifyId(req.params.orderId);
   if (validation === true) {
     if ((Object.keys(req.body).length === 0) || req.body.userId === '' || req.body.client === '' || req.body.status === '' || req.body.products === '') {
-      resp.status(400).json({ message: 'You didn´t enter property to modify' });
-    } else {
-      const status = ['pending', 'canceled', 'delivering', 'delivered'];
-      if (req.body.status && (!status.includes(req.body.status))) {
-        resp.status(400).json({ message: 'The status property is invalid' });
-      } else {
-        const updatedOrder = await Order.findByIdAndUpdate(req.params.orderId, req.body, {
-          new: true,
-        }).populate('products.product');
-        if (updatedOrder === null) {
-          resp.status(404).json({ message: 'The order doesn´t exist' });
-        }
-        resp.status(200).json(updatedOrder);
-      }
+      return resp.status(400).json({ message: 'You didn´t enter property to modify' });
     }
-  } else {
-    resp.status(404).json({ message: 'Id format is invalid' });
+    const status = ['pending', 'canceled', 'delivering', 'delivered'];
+    if (req.body.status && (!status.includes(req.body.status))) {
+      return resp.status(400).json({ message: 'The status property is invalid' });
+    }
+    const updatedOrder = await Order.findByIdAndUpdate(req.params.orderId, req.body, {
+      new: true,
+    }).populate('products.product');
+    if (updatedOrder === null) {
+      return resp.status(404).json({ message: 'The order doesn´t exist' });
+    }
+    return resp.status(200).json(updatedOrder);
   }
+  return resp.status(404).json({ message: 'Id format is invalid' });
 };
 
 const deleteOrderById = async (req, resp) => {
@@ -84,13 +78,11 @@ const deleteOrderById = async (req, resp) => {
   if (validation === true) {
     const deletedOrder = await Order.findByIdAndDelete(req.params.orderId).populate('products.product');
     if (deletedOrder === null) {
-      resp.status(404).json({ message: 'The order doesn´t exist' });
-    } else {
-      resp.status(200).json(deletedOrder);
+      return resp.status(404).json({ message: 'The order doesn´t exist' });
     }
-  } else {
-    resp.status(404).json({ message: 'Id format is invalid' });
+    return resp.status(200).json(deletedOrder);
   }
+  return resp.status(404).json({ message: 'Id format is invalid' });
 };
 
 module.exports = {

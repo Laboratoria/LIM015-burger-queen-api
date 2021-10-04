@@ -1,7 +1,3 @@
-// const {
-//   requireAuth,
-// } = require('../middleware/auth');
-
 const {
   createOrder,
   getOrders,
@@ -143,7 +139,7 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si el producto con `orderId` indicado no existe
    */
-  app.delete('/orders/:orderId', deleteOrderById);
+  app.delete('/orders/:orderId', authorization, deleteOrderById);
 
   nextMain();
 };

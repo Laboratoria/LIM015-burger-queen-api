@@ -11,26 +11,13 @@ const {
 } = require('../controller/users');
 const { authorization, isAdmin } = require('../middleware/auth');
 
-// const {
-//   requireAuth,
-//   requireAdmin,
-// } = require('../middleware/auth');
-
-// const {
-//   getUsers,
-// } = require('../controller/users');
-
+/* istanbul ignore next */
 const initAdminUser = (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
   if (!adminEmail || !adminPassword) {
     return next();
   }
 
-  // const adminUser = {
-  //   email: adminEmail,
-  //   password: bcrypt.hashSync(adminPassword, 10),
-  //   roles: { admin: true },
-  // };
   const adminUser = {
     email: adminEmail,
     password: bcrypt.hashSync(adminPassword, 10),
@@ -38,18 +25,17 @@ const initAdminUser = (app, next) => {
   };
 
   // crear usuaria admin
+  /* istanbul ignore next */
   const searchUser = User.findOne({ email: adminEmail });
-
+  /* istanbul ignore next */
   searchUser
     .then((doc) => {
-      // console.log(doc);
       if (doc) {
-        // console.info('User admin already exists');
         return next(200);
       }
 
       const rolesAdmin = adminUser.roles;
-      const foundRoles = Role.find({ name: { $in: rolesAdmin } }); // $in todas las coincidencias
+      const foundRoles = Role.find({ name: { $in: rolesAdmin } });
       foundRoles
         .then((doc) => {
           adminUser.roles = doc.map((role) => role._id);
@@ -66,8 +52,6 @@ const initAdminUser = (app, next) => {
       }
     });
   next();
-
-  // TODO: crear usuaria admin
 };
 
 /*
@@ -159,7 +143,7 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si ya existe usuaria con ese `email`
    */
-  app.post('/signUp', authorization, isAdmin, singUp);
+  app.post('/users', authorization, isAdmin, singUp);
   // app.post('/users', requireAdmin, (req, resp, next) => {
   // });
   /**

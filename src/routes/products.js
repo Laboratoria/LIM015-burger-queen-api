@@ -1,8 +1,3 @@
-// const {
-//   requireAuth,
-//   requireAdmin,
-// } = require('../middleware/auth');
-
 const {
   getProducts,
   getProductById,

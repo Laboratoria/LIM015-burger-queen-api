@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">31.25% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/16</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">31.25% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/16</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -82,53 +82,53 @@
 <a name='L23'></a><a href='#L23'>23</a>
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">60x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">59x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">58x</span>
+<span class="cline-any cline-yes">58x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">57x</span>
+<span class="cline-any cline-yes">57x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const jwt = require('jsonwebtoken');
 const User = require('../models/Users');
 const { secret } = require('../config');
 &nbsp;
-const auth = <span class="fstat-no" title="function not covered" >as</span>ync (req, resp) =&gt; {
-  const { email, password } = <span class="cstat-no" title="statement not covered" >req.body;</span>
-<span class="cstat-no" title="statement not covered" >  if (!email || !password) {</span>
-<span class="cstat-no" title="statement not covered" >    return resp.status(404).json('You didn´t enter email or password');</span>
+const auth = async (req, resp) =&gt; {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return resp.status(400).json({ message: 'You didn´t enter email or password' });
   }
 &nbsp;
-  const userFound = <span class="cstat-no" title="statement not covered" >await User.findOne({ email: req.body.email });</span>
+  const userFound = await User.findOne({ email: req.body.email });
   // const passwordFpound = await User.findOne({password: req.body.password});
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (!userFound) {</span>
-<span class="cstat-no" title="statement not covered" >    return resp.status(404).json('user not found');</span>
+  if (!userFound) {
+    return resp.status(404).json({ mesagge: 'user not found' });
   }
-  const matchPassword = <span class="cstat-no" title="statement not covered" >await User.comparePassword(req.body.password, userFound.password);</span>
-<span class="cstat-no" title="statement not covered" >  if (!matchPassword) {</span>
-<span class="cstat-no" title="statement not covered" >    return resp.status(401).json({ token: null, message: 'Invalid password' });</span>
+  const matchPassword = await User.comparePassword(req.body.password, userFound.password);
+  if (!matchPassword) {
+    return resp.status(401).json({ token: null, message: 'Invalid password' });
   }
-  const token = <span class="cstat-no" title="statement not covered" >jwt.sign({ id: userFound._id }, secret, { expiresIn: 86400 });</span>
-<span class="cstat-no" title="statement not covered" >  resp.status(200).json({ token });</span>
+  const token = jwt.sign({ id: userFound._id }, secret, { expiresIn: 86400 });
+  resp.status(200).json({ token });
 };
 &nbsp;
 module.exports = { auth };
@@ -139,7 +139,7 @@ module.exports = { auth };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Sep 29 2021 22:03:28 GMT-0500 (GMT-05:00)
+                at Sun Oct 03 2021 21:06:44 GMT-0500 (GMT-05:00)
             </div>
         </div>
         <script src="../../prettify.js"></script>

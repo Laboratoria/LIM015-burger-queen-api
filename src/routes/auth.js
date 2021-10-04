@@ -1,9 +1,4 @@
-// const jwt = require('jsonwebtoken');
-// const config = require('../config');
 const { auth } = require('../controller/auth');
-// const { singIn, singUp } = require('../controller/auth');
-
-// const { secret } = config;
 
 /** @module auth */
 module.exports = (app, nextMain) => {
