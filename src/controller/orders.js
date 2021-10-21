@@ -7,22 +7,20 @@ const createOrder = async (req, resp) => {
     userId, client, status, products,
   } = req.body;
   if (!userId || !products || products.length === 0) {
-    resp.status(400).json({ message: 'You don´t enter products or userId' });
-  } else {
-    const newOrder = new Order({
-      userId, client, status, products,
-    });
-    products.map(async (el) => {
-      const foundProduct = await Product.find({ _id: { $in: el.product } });
-      if (foundProduct.length === 0) {
-        resp.status(404).json({ message: 'The product doesn´t exists' });
-      } else {
-        const savedOrder = await newOrder.save();
-        const populatedOrder = await Order.findOne({ _id: savedOrder._id }).populate('products.product');
-        resp.status(200).json(populatedOrder);
-      }
-    });
+    return resp.status(400).json({ message: 'You don´t enter products or userId' });
   }
+  const newOrder = new Order({
+    userId, client, status, products,
+  });
+  products.map(async (el) => {
+    const foundProduct = await Product.find({ _id: { $in: el.product } });
+    if (foundProduct.length === 0) {
+      return resp.status(404).json({ message: 'The product doesn´t exists' });
+    }
+  });
+  const savedOrder = await newOrder.save();
+  const populatedOrder = await Order.findOne({ _id: savedOrder._id }).populate('products.product');
+  return resp.status(200).json(populatedOrder);
 };
 
 const getOrders = async (req, resp) => {
