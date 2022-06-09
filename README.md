@@ -8,7 +8,6 @@
 * [4. Consideraciones generales](#4-consideraciones-generales)
 * [5. Criterios de aceptación mínimos del proyecto](#5-criterios-de-aceptaci%C3%B3n-m%C3%ADnimos-del-proyecto)
 * [6. Pistas, tips y lecturas complementarias](#6-pistas-tips-y-lecturas-complementarias)
-* [7 HTTP API Checklist](#7-http-api-checklist)
 
 ## 1. Preámbulo
 
@@ -422,39 +421,3 @@ dudes en consultar con tus pares y tus coaches.
 * [Postman](https://www.getpostman.com)
 * [Variable de entorno - Wikipedia](https://es.wikipedia.org/wiki/Variable_de_entorno)
 * [`process.env` - Node.js docs](https://nodejs.org/api/process.html#process_process_env)
-
----
-
-## 7 HTTP API Checklist
-
-### 7.1 `/`
-
-* [ ] `GET /`
-
-### 7.2 `/auth`
-
-* [ ] `POST /auth`
-
-### 7.3 `/users`
-
-* [ ] `GET /users`
-* [ ] `GET /users/:uid`
-* [ ] `POST /users`
-* [ ] `PUT /users/:uid`
-* [ ] `DELETE /users/:uid`
-
-### 7.4 `/products`
-
-* [ ] `GET /products`
-* [ ] `GET /products/:productid`
-* [ ] `POST /products`
-* [ ] `PUT /products/:productid`
-* [ ] `DELETE /products/:productid`
-
-### 7.5 `/orders`
-
-* [ ] `GET /orders`
-* [ ] `GET /orders/:orderId`
-* [ ] `POST /orders`
-* [ ] `PUT /orders/:orderId`
-* [ ] `DELETE /orders/:orderId`
